@@ -65,3 +65,103 @@ The head of the expression, 𝜆𝑥., abstracts out the term 𝑥 + 1. We can a
 
 - IO is the type for values whose evaluation bears the possi- bility of causing side effects, such as printing text, reading text input from the user, reading or writing to files, or connecting to remote computers. 
 - An instance is the definition of how a type class should work for a given type.
+
+## Chap 7 - More Functional Patterns
+- anonymous function
+  ```
+  triple x = x * 3
+  (\x -> x * 3)
+
+  with specific type
+  (\x -> x * 3) :: Integer -> Integer
+  (\x -> x * 3 :: Integer)
+
+  ghci> (\x -> x * 3) 1
+
+  mTh x y z = x * y * z
+  mTh x y = \z -> x * y * z
+  mTh x = \y -> \z -> x * y * z
+  mTh = \x -> \y -> \z -> x * y * z
+
+  ```
+  
+- pattern matching
+  ```
+  isItTwo :: Integer -> Bool
+  isItTwo 2 = True
+  isItTwo _ = False
+
+  f :: (a, b) -> (c, d) -> ((b, d), (a, c)) 
+  f x y = ((snd x, snd y), (fst x, fst y))
+  f (a, b) (c, d) = ((b, d), (a, c))
+
+  fst3 :: (a, b, c) -> a
+  fst3 (x, _, _) = x
+
+  returnLast :: a -> b -> c -> d -> d 
+  returnLast _ _ _ d = d
+
+  ```
+- case expressions
+  ```
+  funcZ x =
+    case x + 1 == 1 of
+      True -> "AWESOME" 
+      False -> "wut"
+  ```
+
+- HOF
+  ```
+  myf :: (a -> b) -> a -> c -> b
+  myf f a c = f a
+  ```
+
+  Exercise: Artful dodgy - [sol](./ch7/artfulDodgy.hs)
+
+- Guards
+  ```
+  myAbs :: Integer -> Integer 
+  myAbs x
+    | x < 0 = (-x) 
+    | otherwise = x
+
+  dogYrs :: Integer -> Integer 
+  dogYrs x
+    | x<=0 =0
+    | x<=1 = x * 15
+    | x<=2 = x * 12
+    | x<=4 = x * 8
+    | otherwise = x * 6
+  ```
+
+  Exercise: Guard Duty - [sol](./ch7/guardDuty.hs)
+
+- Function composition
+  ```
+  f g x
+  (f.g) x
+  f (g x)
+  f.g $ x
+
+  negate sum xs
+  negate . sum $ xs
+  (negate . sum) xs
+
+  take 5 . enumFrom $ 3
+
+  take 5 . filter odd . enumFrom $ 3 
+
+  ```
+
+- Point-free style
+  ``` 
+  (f . g) x = f (g x)
+  f . g = \x -> f (g x)
+  f . g . h = \x -> f (g (h x))
+
+  ```
+
+
+
+
+
