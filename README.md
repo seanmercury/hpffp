@@ -66,6 +66,8 @@ The head of the expression, 𝜆𝑥., abstracts out the term 𝑥 + 1. We can a
 - IO is the type for values whose evaluation bears the possi- bility of causing side effects, such as printing text, reading text input from the user, reading or writing to files, or connecting to remote computers. 
 - An instance is the definition of how a type class should work for a given type.
 
+See [Practice](../practice/typeCheck) for Chap 6 & 7
+
 ## Chap 7 - More Functional Patterns
 - anonymous function
   ```
@@ -154,13 +156,26 @@ The head of the expression, 𝜆𝑥., abstracts out the term 𝑥 + 1. We can a
   ```
 
 - Point-free style
+  composing functions without parameter
   ``` 
   (f . g) x = f (g x)
   f . g = \x -> f (g x)
   f . g . h = \x -> f (g (h x))
 
   ```
+  [arith2.hs](./ch7/arith2.hs)
 
+## Chap 8 - Recursion
+  ```
+  factorial :: Integer -> Integer 
+  factorial 0 = 1
+  factorial n = n * factorial (n - 1)
+
+  fibonacci :: Integral a => a -> a 
+  fibonacci 0 = 0
+  fibonacci 1 = 1
+  fibonacci x = fibonacci (x - 1) + fibonacci (x - 2)
+  ```
 
 
 

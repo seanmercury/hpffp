@@ -42,6 +42,12 @@ foldBool2 a b c
   | c == True = b
   | c == False = a
 
+foldBool3 :: a -> a -> Bool -> a 
+foldBool3 a b c 
+  | c = b
+  | not c = a
+
+
 -- 3
 g :: (a -> b) -> (a, c) -> (b, c)
 g f (a, c) = (f a, c) 
