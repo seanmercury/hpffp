@@ -108,7 +108,7 @@ myMap :: (a -> b) -> [a] -> [b]
 myMap f = foldr ((:) . f) []
 
 myFilter :: (a -> Bool) -> [a] -> [a]
-myFilter f = foldr (\x y -> if f x then x : y else y) [] 
+myFilter f = foldr (\x -> if f x then (x:) else id) [] 
 
 squish :: [[a]] -> [a]
 squish = foldr (++) []

@@ -232,5 +232,31 @@ See [Practice](../practice/typeCheck) for Chap 6 & 7
 
   Haskell is not necessarily lazy. Compiler chooses strictness according to the categories in Strictness analyzer.
 
+## Chap 10 - Folding Lists
+  Fold is a HOF that given a function to accumulate the results and returns the built up value.
+
+  ```
+  foldr :: Foldable t => (a -> b -> b) -> b -> t a -> b
+  foldl :: Foldable t => (b -> a -> b) -> b -> t a -> b
+  ```
+
+  A catamorphism is a generalization of folds to arbitrary datatypes. Where a fold allows you to break down a list into an arbitrary
+datatype, a catamorphism is a means of breaking down the structure of any datatype.
+
+  ```
+  data Bool = False | True
+  bool :: a -> a -> Bool -> a
+  ```
+
+  ```
+  foldr f z [] = z
+  foldr f z (x:xs) = f x (foldr f z xs)
+
+  foldl f z [] = z
+  foldl f z (x:xs) = foldl f (f z x) xs
+  ```
+
+## Chap 11 - Folding Lists
+
 
 
