@@ -166,97 +166,193 @@ See [Practice](../practice/typeCheck) for Chap 6 & 7
   [arith2.hs](./ch7/arith2.hs)
 
 ## Chap 8 - Recursion
-  ```
-  factorial :: Integer -> Integer 
-  factorial 0 = 1
-  factorial n = n * factorial (n - 1)
+```
+factorial :: Integer -> Integer 
+factorial 0 = 1
+factorial n = n * factorial (n - 1)
 
-  fibonacci :: Integral a => a -> a 
-  fibonacci 0 = 0
-  fibonacci 1 = 1
-  fibonacci x = fibonacci (x - 1) + fibonacci (x - 2)
-  ```
+fibonacci :: Integral a => a -> a 
+fibonacci 0 = 0
+fibonacci 1 = 1
+fibonacci x = fibonacci (x - 1) + fibonacci (x - 2)
+```
+
 ## Chap 9 - List
-  WHNF(Weak Head Normal Form) - the expression is only evaluated as far as is necessary to reach a data constructor or lamda.
-    top most thing outer most thing is top most constructor
-    top most thing lamda
+WHNF(Weak Head Normal Form) - the expression is only evaluated as far as is necessary to reach a data constructor or lamda.
+  top most thing outer most thing is top most constructor
+  top most thing lamda
 
-  NF(Normal Form) - the expression is fully evaluated.
-  ```
-  (1, 2) -- WHNF & NF
-  (1, 1 + 1) -- WHNF & not NF
-  \x -> x * 10 -- WHNF & NF
-  "Papu" ++ "chon" -- not WHNF & not NF
-  num :: [Int]; num = [1,2,3] -- WHNF & not NF (Note: `[1,2,3]` gets compiled to `1:(_{2:3:[]}_)`)
-  num :: [Int]; myNum = [1..10] – not WHNF & not NF  (Note: `[1..10]` gets compiled to `enumFromTo 1 10`)
-  
-  [1,2,3,4,5] -- WHNF & NF (good!) 
-  1:2:3:4:_ -- WHNF & not NF (good!)
-  enumFromTo 1 10 -- not WHNF & not NF (good!)
-  length [1,2,3,4,5] -- not WHNF & NF (to be NF, it must first be WHNF.)
-  sum (enumFromTo 1 10) -- not WHNF & not NF (good!)
-  ['a'..'m'] ++ ['n'..'z'] -- not WHNF & not NF (good!)
-  (_, 'b') -- WHNF & not NF (good! the root of the syntax tree is a data constructor)
+NF(Normal Form) - the expression is fully evaluated.
+```
+(1, 2) -- WHNF & NF
+(1, 1 + 1) -- WHNF & not NF
+\x -> x * 10 -- WHNF & NF
+"Papu" ++ "chon" -- not WHNF & not NF
+num :: [Int]; num = [1,2,3] -- WHNF & not NF (Note: `[1,2,3]` gets compiled to `1:(_{2:3:[]}_)`)
+num :: [Int]; myNum = [1..10] – not WHNF & not NF  (Note: `[1..10]` gets compiled to `enumFromTo 1 10`)
 
-
-  f(x) = x^2 - 2x - 4
-
-  g(x) = 1 - x^3
-
-  h(x) = (3x + f(1 - 3x)) / g(x - 4)
+[1,2,3,4,5] -- WHNF & NF (good!) 
+1:2:3:4:_ -- WHNF & not NF (good!)
+enumFromTo 1 10 -- not WHNF & not NF (good!)
+length [1,2,3,4,5] -- not WHNF & NF (to be NF, it must first be WHNF.)
+sum (enumFromTo 1 10) -- not WHNF & not NF (good!)
+['a'..'m'] ++ ['n'..'z'] -- not WHNF & not NF (good!)
+(_, 'b') -- WHNF & not NF (good! the root of the syntax tree is a data constructor)
 
 
-  suppose we need h(4)
+f(x) = x^2 - 2x - 4
 
-  traditionally, we start on the inner most pieces, the leaves of the syntax tree.
-  h(4) = (3*4 + f(1-3*4))/g(4-4)
-       = (12 + f(1-12))/g(0)
-       = (12 + f(-11))/(1 - 0^3)
-       = (12 + ((-11)^2 - 2*(-11) - 4)) / (1 - 0)
+g(x) = 1 - x^3
 
-  but what if i told you that we don't have to start on the inside first? (morpheus look)
-  h(x) = (3x + f(1 - 3x)) / g(x - 4)
-  h(x) = (3x + ( (1-3x)^2 - 2*(1-3x) - 4) / (1 - (x - 4)^3)
-                 ^ we evaluated f without evaluating its argument first!
-                            ^ same, evaluated g before evaluating its arg!
+h(x) = (3x + f(1 - 3x)) / g(x - 4)
 
 
+suppose we need h(4)
 
-  ```
+traditionally, we start on the inner most pieces, the leaves of the syntax tree.
+h(4) = (3*4 + f(1-3*4))/g(4-4)
+      = (12 + f(1-12))/g(0)
+      = (12 + f(-11))/(1 - 0^3)
+      = (12 + ((-11)^2 - 2*(-11) - 4)) / (1 - 0)
 
-  strict evaluation is when you evaluate your arguments before evaluating the function.
-  This is how C, Java, Javascript, Python almost every programming language works.
+but what if i told you that we don't have to start on the inside first? (morpheus look)
+h(x) = (3x + f(1 - 3x)) / g(x - 4)
+h(x) = (3x + ( (1-3x)^2 - 2*(1-3x) - 4) / (1 - (x - 4)^3)
+                ^ we evaluated f without evaluating its argument first!
+                          ^ same, evaluated g before evaluating its arg!
 
-  lazy evaluation is when you evaluate your functions before evaluating their arguments.
-  This is how (most things in) Haskell (usually) works.
 
-  Haskell is not necessarily lazy. Compiler chooses strictness according to the categories in Strictness analyzer.
+
+```
+
+strict evaluation is when you evaluate your arguments before evaluating the function.
+This is how C, Java, Javascript, Python almost every programming language works.
+
+lazy evaluation is when you evaluate your functions before evaluating their arguments.
+This is how (most things in) Haskell (usually) works.
+
+Haskell is not necessarily lazy. Compiler chooses strictness according to the categories in Strictness analyzer.
 
 ## Chap 10 - Folding Lists
-  Fold is a HOF that given a function to accumulate the results and returns the built up value.
+Fold is a HOF that given a function to accumulate the results and returns the built up value.
 
-  ```
-  foldr :: Foldable t => (a -> b -> b) -> b -> t a -> b
-  foldl :: Foldable t => (b -> a -> b) -> b -> t a -> b
-  ```
+```
+foldr :: Foldable t => (a -> b -> b) -> b -> t a -> b
+foldl :: Foldable t => (b -> a -> b) -> b -> t a -> b
+```
 
-  A catamorphism is a generalization of folds to arbitrary datatypes. Where a fold allows you to break down a list into an arbitrary
+A catamorphism is a generalization of folds to arbitrary datatypes. Where a fold allows you to break down a list into an arbitrary
 datatype, a catamorphism is a means of breaking down the structure of any datatype.
 
-  ```
-  data Bool = False | True
-  bool :: a -> a -> Bool -> a
-  ```
+```
+data Bool = False | True
+bool :: a -> a -> Bool -> a
+```
 
-  ```
-  foldr f z [] = z
-  foldr f z (x:xs) = f x (foldr f z xs)
+```
+foldr f z [] = z
+foldr f z (x:xs) = f x (foldr f z xs)
 
-  foldl f z [] = z
-  foldl f z (x:xs) = foldl f (f z x) xs
-  ```
+foldl f z [] = z
+foldl f z (x:xs) = foldl f (f z x) xs
+```
 
-## Chap 11 - Folding Lists
+## Chap 11 - Algebraic Datatypes
+type constructor vs data costructor 
+  - type constructors -- compile-time
+  - data constructors -- runtime
+
+Type and data constructors that take no arguments are constants.
+
+newtype - a type that can only ever have a single unary data constructor
+  Benefits: 
+    - Enables writing customize instances
+    - Lightweight
+    check [newtype.hs](ch11/newtype.hs)
+
+You can think of Haskell code 
+```data Aa = Bb Cc Dd | Ee Ff Gg Hh | Ii | Jj Kk``` as being compiled to code that's roughly equivalent to some Javascript that looks like this:
+function Bb(Cc, Dd) {
+    return ["Bb", Cc, Dd];
+}
+function Ee(Ff, Gg, Hh) {
+    return ["Ee", Ff, Gg, Hh];
+}
+function Ii() {
+    return ["Ii"];
+}
+function Jj(Kk) {
+    return ["Jj", Kk];
+}
+
+notice that Aa doesn't appear anywhere in there.
+
+when you write this pattern matching code in haskell:
+
+```
+doSomeStuff a = case a of
+    Bb x y -> f1 x y
+    Ee u v w -> f2 u v w
+    Ii -> f3
+    Jj z -> f4 z
+```
+
+it compiles to javascript that would look something like this
+
+```
+function doSomeStuff(a) {
+    switch a[0] {
+        case "Bb":
+            var x = aa[1];
+            var y = aa[2];
+            return f1(x,y);
+        case "Ee":
+            var u = aa[1];
+            var v = aa[2];
+            var w = aa[3];
+            return f2(u,v,w);
+        case "Ii":
+            return f3();
+        case "Jj":
+            let z = aa[1];
+            return f4(z);
+    }
+}
+```
+So, you can think of every Haskell data value as natively being represented by an array where the first element is the constructor tag.
+
+Record syntax
+```data Person = Person {name::String, age::Int}```
+
+types progression could implement builder pattern
+```
+data ThereYet =
+  There Float Int Bool
+  deriving (Eq, Show)
+
+nope = There
+
+notYet :: Int -> Bool -> ThereYet
+notYet = nope 25.5
+
+notQuite :: Bool -> ThereYet
+notQuite = notYet 10
+
+yusssss :: ThereYet
+yusssss = notQuite False
+```
+
+```
+There     :: Float -> Int -> Bool -> ThereYet
+notYet    ::          Int -> Bool -> ThereYet
+notQuite  ::                 Bool -> ThereYet
+yusssss   ::                         ThereYet
+```
+
+In Haskell, we want the type checker to catch us doing things
+wrong, so we can fix our mistakes before problems multiply and things
+go wrong at runtime. But the type checker can best help those who
+help themselves
 
 
 
